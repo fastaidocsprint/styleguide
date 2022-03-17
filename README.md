@@ -6,7 +6,9 @@ This is an extreme TL;DR of the style guide, providing you with direction on how
 
 ## Typing & Type Hints
 
-With limited exceptions, all method arguments and return types should be have type hints. 
+All public method and function arguments and return types should have type hints, whenever a reasonably simple and useful type hint can be used accurately.
+
+A type which is incorrect or more restrictive than necessary can cause IDEs to incorrectly flag passed arguments as errors. In this case, it is preferred for the type hint to be less restrictive or to be removed entirely.
 
 One noteable exception is if the return type is `self`. Then the type hint should be skipped.
 
@@ -25,17 +27,19 @@ to the imports in all notebooks with `|` to backport Python 3.10 style type hint
 
 ### Generic Types
 
-Undecided whether to use them, partially use them, or not use them.
+Generic types should be added where they provide clarity to the type hint without being overly verbose or complicated. But they must be correct.
+
+A generic type which is incorrect or more restrictive than necessary can cause IDEs to incorrectly flag passed arguments as errors. In this case, it is preferred for the type hint to be less restrictive or not contain a type at all.
 
 ### Custom Type Aliases
 
-To simplify type hinting, fastai has some type aliases. 
+To simplify type hinting, fastai has some custom type aliases. 
 
 Most fastai methods accept an iterator, a sequence, or a collection. `listy` is type alias which combines them all:
 
 ```python
 T = TypeVar('T')
-listy = Union[list[T], tuple[T], Sequence[T], Iterable[T], L, fastuple]
+listy = Union[Iterable[T], L, fastuple]
 ```
 
 along with fastcore classes `L` and `fastuple`.
@@ -44,6 +48,18 @@ It is possible to add generic types to `listy`.
 
 ```python
 listy[int]
+```
+
+Where the input expects a single or list-like of items, use `listified`:
+
+```python
+T = TypeVar('T')
+listified = Union[T, Iterable[T], L, fastuple]
+```
+with the generic type hint required:
+
+```python
+listified[int]
 ```
 
 ### List and Tuple
@@ -94,9 +110,9 @@ As an example, here is a "well documented" function definition:
 
 ```python
 def addition(
-    a:int|float, # The first number to be added
-    b:int|float, # The second number to be added
-) -> int|float:
+    a:Number, # The first number to be added
+    b:Number, # The second number to be added
+) -> Number:
     "Adds two numbers together"
     return a+b
 ```
@@ -113,23 +129,23 @@ Combine this with the `show_doc` functionality in `nbdev`, and you are presented
 
 <h4 id="addition" class="doc_header"><code>addition</code><a href="__main__.py#L1" class="source_link" style="float:right">[source]</a></h4>
 
-> <code>addition</code>(**`a`**:`(<class 'int'>, <class 'float'>)`, **`b`**:`(<class 'int'>, <class 'float'>)`)
+> <code>addition</code>(**`a`**:`Number`, **`b`**:`Number`)
 
 Adds two numbers together
 
-|             | Type         | Default | Details                       |
-| ----------- | ------------ | ------- | ----------------------------- |
-| **`a`**     | `int, float` |         | The first number to be added  |
-| **`b`**     | `int, float` |         | The second number to be added |
-| **Returns** | `int, float` |         |                               |
+|             | Type     | Default | Details                       |
+| ----------- | -------- | ------- | ----------------------------- |
+| **`a`**     | `Number` |         | The first number to be added  |
+| **`b`**     | `Number` |         | The second number to be added |
+| **Returns** | `Number` |         |                               |
 
 If the return value requires additional documentation, we can add a return docment too:
 
 ```python
 def addition(
-    a:int|float, # The first number to be added
-    b:int|float, # The second number to be added
-) -> int|float: # The sum of `a` and `b`
+    a:Number, # The first number to be added
+    b:Number, # The second number to be added
+) -> Number: # The sum of `a` and `b`
     "Adds two numbers together"
     return a+b
 ```
@@ -137,7 +153,7 @@ def addition(
 Docments may be skipped for simple methods with one argument, provided the argument’s role is understandable from the doc string:
 
 ```python
-def add_one(self, a:listy[int|float]) -> list[int|float]:
+def add_one(self, a:listy[Number]) -> list[Number]:
     "Adds one to all items in `a`"
     return [i+1 for i in a]
 ```
@@ -160,7 +176,7 @@ class Learner:
         n_epoch:int, # Number of training epochs
         lr:float|None=None, # Learning rate, defaults to `self.lr`
         wd:float|None=None, # Weight decay, defaults to `self.wd`
-        cbs:Callback|listy[Callback]|None=None, # Temporary `Callback` applied during training
+        cbs:listified[Callback]|None=None, # Temporary `Callback` applied during training
         reset_opt:bool=False # Recreate optimizer before training
     ):
         "Fit `self.model` for `n_epoch` using `cbs`. Optionally `reset_opt`."
@@ -189,7 +205,7 @@ class Learner:
         n_epoch:int, # Number of training epochs
         lr:float|None=None, # Learning rate, defaults to `self.lr`
         wd:float|None=None, # Weight decay, defaults to `self.wd`
-        cbs:Callback|listy[Callback]|None=None, # Temporary `Callback` applied during training
+        cbs:listified[Callback]|None=None, # Temporary `Callback` applied during training
         reset_opt:bool=False # Recreate optimizer before training
     ):
         "Fit `self.model` for `n_epoch` using `cbs`. Optionally `reset_opt`."
@@ -213,7 +229,7 @@ class Learner:
             n_epoch:int, # Number of training epochs
             lr:float|None=None, # Learning rate, defaults to `self.lr`
             wd:float|None=None, # Weight decay, defaults to `self.wd`
-            cbs:Callback|listy[Callback]|None=None, # Temporary `Callback` applied during training
+            cbs:listified[Callback]|None=None, # Temporary `Callback` applied during training
             reset_opt:bool=False # Recreate optimizer before training
     ):
         "Fit `self.model` for `n_epoch` using `cbs`. Optionally `reset_opt`."
@@ -231,7 +247,7 @@ class Learner:
         n_epoch:int, # Number of training epochs
         lr:float|None=None, # Learning rate, defaults to `self.lr`
         wd:float|None=None, # Weight decay, defaults to `self.wd`
-        cbs:Callback|listy[Callback]|None=None, # Temporary `Callback` applied during training
+        cbs:listified[Callback]|None=None, # Temporary `Callback` applied during training
         reset_opt:bool=False # Recreate optimizer before training
 ):
         "Fit `self.model` for `n_epoch` using `cbs`. Optionally `reset_opt`."
@@ -247,7 +263,7 @@ class Learner:
         n_epoch:int, # Number of training epochs
         lr:float|None=None, # Learning rate, defaults to `self.lr`
         wd:float|None=None, # Weight decay, defaults to `self.wd`
-        cbs:Callback|listy[Callback]|None=None, # Temporary `Callback` applied during training
+        cbs:listified[Callback]|None=None, # Temporary `Callback` applied during training
         reset_opt:bool=False # Recreate optimizer before training
            ):
         "Fit `self.model` for `n_epoch` using `cbs`. Optionally `reset_opt`."
