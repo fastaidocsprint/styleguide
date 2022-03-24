@@ -1,8 +1,8 @@
-# fastai docment Sprint Style Guide
+# fastai "docment" Sprint Style Guide
 
 ## Introduction
 
-This is an extreme TL;DR of the style guide, providing you with direction on how to properly "docment" a function. For the full style guide, you should follow [the style documentation](https://docs.fast.ai/dev/style.html).
+This is a doc-sprint specific style guide, providing you with direction on how to properly "docment" and add type hints to methods and functions. For everything else you should follow [the style documentation](https://docs.fast.ai/dev/style.html).
 
 ## Typing & Type Hints
 
@@ -10,7 +10,9 @@ All public method and function arguments and return types should have type hints
 
 A type which is incorrect or more restrictive than necessary can cause IDEs to incorrectly flag passed arguments as errors. In this case, it is preferred for the type hint to be less restrictive or to be removed entirely.
 
-One noteable exception is if the return type is `self`. Then the type hint should be skipped.
+Type hints can be added to private methods and functions, but they must enhance the existing context. Type hints are an additional item to be maintained, so don't add them to private methods and functions unless they're going to be helpful to other developers.
+
+One noteable exception for adding type hints is if the return type is `self`. Then the type hint should be skipped.
 
 ### Python 3.10 type hints
 
@@ -64,13 +66,13 @@ listified[int]
 
 ### List and Tuple
 
-If list or tuple is needed instead of listy, instead of `typing.List` or `typing.Tuple`, use `list` and `tuple` directly:
+If a list or tuple is needed instead of `listy`, use `list` and `tuple` directly instead of `typing.List` or `typing.Tuple`:
 
 * `list[int]`
 * `tuple[int,int]`
 * `tuple[int,...]`
 
-`tuple` type hints require explicit dimensions to be specified or the use of `type,...` for variable dimensions, while `list` type hints only need to specify the type of the list for all dimensions.
+`tuple` type hints require explicit dimensions to be specified or the use of `type,...` for variable dimensions, while `list` type hints only need to specify the type of the list for variable dimensions.
 
 ### When to use the `typing` package?
 
@@ -79,7 +81,7 @@ If list or tuple is needed instead of listy, instead of `typing.List` or `typing
 * `Callable`
 * `Any`
 
-`Callable` type hints should define the return type(s) of the function. If the method input varies or is consistently long (ex: `opt_func`) then use `...` to denote variable input types:
+`Callable` type hints should define the return type(s) of the function. If the function input varies or is consistently long (ex: `opt_func`) then use `...` to denote variable input types:
 
 ```python
 class Learner(GetAttr):
@@ -96,7 +98,7 @@ but if it is short and known (ex: `splitter`), then add the input type to `Calla
 
 Type hints should be validated to be error free by setting a type checker, such as Pylance (VSCode), Pyright, or mypy to basic type hint checking (or equivalent).
 
-Due to quirks of each individual type hint checker, runtime functionally being unparsable pre-runtime (such as fastcore’s `mk_class`), or calling methods which lack type hints, not all type hint errors will be resolvable. 
+Due to quirks of each individual type hint checker—such as runtime functionally being unparsable pre-runtime (such as fastcore’s `mk_class`) or calling methods which lack type hints—not all type hint errors will be resolvable. 
 
 A reasonable effort should be made to identify and correct all other type hint errors.
 
@@ -160,7 +162,7 @@ def add_one(self, a:listy[Number]) -> list[Number]:
 
 This will often be applicable for simple class methods.
 
-Whether on a newline or one-liner, a method return type should always have a space after the closing parenthesis and the return arrow: `) -> list[int|float]:`
+Whether on a newline or one-liner, a method return type should always have a space after the closing parenthesis and the return arrow: `) -> list[Number]:`
 
 ## Additional Style Examples
 
