@@ -37,16 +37,14 @@ A generic type which is incorrect or more restrictive than necessary can cause I
 
 To simplify type hinting, fastai has some custom type aliases. 
 
-Most fastai methods accept an iterator, a sequence, or a collection. `listy` is type alias which combines them all:
+Most fastai methods which accept lists can accept any iterator, sequence, or collection. `listy` is type alias which combines them all along with fastcore classes `L` and `fastuple`:
 
 ```python
 T = TypeVar('T')
 listy = Union[Iterable[T], L, fastuple]
 ```
 
-along with fastcore classes `L` and `fastuple`.
-
-It is possible to add generic types to `listy`.
+It is possible to add generic types to `listy`:
 
 ```python
 listy[int]
