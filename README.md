@@ -16,16 +16,27 @@ One noteable exception for adding type hints is if the return type is `self`. Th
 
 ### Python 3.10 type hints
 
-Rather than using `typing` methods such as `Union` or `Optional`, the convention is to specify *and* or *or* using Python 3.10 style type hints. This is a practical design choice, aiming for less key-strokes while still being readable.
+Rather than using `typing` methods such as `Union` or `Optional`, the convention is to specify them using Python 3.10 style type hints. This is a practical design choice, aiming for less key-strokes while still being readable.
 
 - `TypeA|TypeB` denoting `TypeA` **or** `TypeB`.
 - `TypeA|TypeB|None` denoting that `TypeA` and `TypeB` are optional
 
-This requires adding:
+All notebooks must import:
 ```python
 from __future__ import annotations
 ```
-to the imports in all notebooks with `|` to backport Python 3.10 style type hints to 3.7-3.9.
+to backport Python 3.10 style type hints to Python 3.7-3.9.
+
+This should go in the first exported cell with imports:
+
+```python
+#export
+from __future__ import annotations
+from fastai.data.all import *
+from fastai.optimizer import *
+from fastai.callback.core import *
+import pickle
+```
 
 ### Generic Types
 
@@ -70,7 +81,7 @@ If a list or tuple is needed instead of `listy`, use `list` and `tuple` directly
 * `tuple[int,int]`
 * `tuple[int,...]`
 
-`tuple` type hints require explicit dimensions to be specified or the use of `type,...` for variable dimensions, while `list` type hints only need to specify the type of the list for variable dimensions.
+`tuple` type hints require explicit dimensions to be specified or the use of `type,...` for variable dimensions, while `list` type hints only need to specify the type of the list for variable dimensions. `list` and `tuple` also requires `from __future__ import annotations`.
 
 ### When to use the `typing` package?
 
