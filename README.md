@@ -97,7 +97,7 @@ class Learner(GetAttr):
     def __init__(self,
     	...,
     	opt_func:Callable[..., Optimizer|OptimWrapper]=Adam,
-    	splitter:Callable[nn.Module, list[nn.Parameter]]=trainable_params,
+    	splitter:Callable[[nn.Module], list[nn.Parameter]]=trainable_params,
     	...,
     ):
 ```
