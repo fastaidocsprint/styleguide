@@ -85,7 +85,7 @@ If a list or tuple is needed instead of `listy`, use `list` and `tuple` directly
 
 ### When to use the `typing` package?
 
-`typing` methods are used when needed. Currently fastai used the following a handful of `typing` methods, although more can be added as needed: 
+`typing` methods are used when needed. Currently fastai used the following a handful of `typing` methods, although more can be added per notebook if needed: 
 
 * `Callable`
 * `Any`
@@ -97,7 +97,7 @@ class Learner(GetAttr):
     def __init__(self,
     	...,
     	opt_func:Callable[..., Optimizer|OptimWrapper]=Adam,
-    	splitter:Callable[[nn.Module], list[nn.Parameter]]=trainable_params,
+    	splitter:Callable[[nn.Module], listy[nn.Parameter]]=trainable_params,
     	...,
     ):
 ```
@@ -128,7 +128,7 @@ def addition(
     return a+b
 ```
 
-Very clearly you can see that even though the docstring is quite small, when combined with the docments we get a very clear return.
+Very clearly you can see even though the docstring is quite small, when combined with the docments we get a very clear return.
 
 Combine this with the `show_doc` functionality in `nbdev`, and you are presented with a clear documentation snippet:
 
@@ -187,7 +187,7 @@ class Learner:
         n_epoch:int, # Number of training epochs
         lr:float|None=None, # Learning rate, defaults to `self.lr`
         wd:float|None=None, # Weight decay, defaults to `self.wd`
-        cbs:listified[Callback]|None=None, # Temporary `Callback` applied during training
+        cbs:listified[Callback|Callable[...,Callback]]|None=None, # Temporary `Callback` applied during training
         reset_opt:bool=False # Recreate optimizer before training
     ):
         "Fit `self.model` for `n_epoch` using `cbs`. Optionally `reset_opt`."
@@ -206,7 +206,7 @@ def flip_lr(x:Image.Image):
 
 ### Miscellaneous
 
-If an optional argument has a default set in code, concisely mention it in the docment (ex: `lr` and `wd`). If it isn’t used, there is no need to state it is “optional” as that is implied by the type hint of `None` (ex: `cbs`).
+If an optional argument has a default set in code, concisely mention it in the docment (ex: `lr` and `wd`). There is no need to state it is “optional” as that is implied by the type hint of `None` (ex: `cbs`).
 
 ```python
 class Learner:
@@ -216,15 +216,15 @@ class Learner:
         n_epoch:int, # Number of training epochs
         lr:float|None=None, # Learning rate, defaults to `self.lr`
         wd:float|None=None, # Weight decay, defaults to `self.wd`
-        cbs:listified[Callback]|None=None, # Temporary `Callback` applied during training
+        cbs:listified[Callback|Callable[...,Callback]]|None=None, # Temporary `Callback` applied during training
         reset_opt:bool=False # Recreate optimizer before training
     ):
         "Fit `self.model` for `n_epoch` using `cbs`. Optionally `reset_opt`."
 ```
 
-Likewise, forego starting a docment with “list of”, as that is implied by the type hint of `list` (ex: `cbs`).
+Likewise, forego starting a docment with “list of”, as that is implied by the type hint of `listy` or `listified` (ex: `cbs`).
 
-Boolean docments should be written to describe what the argument does if true  (ex: `reset_opt`). Forgo phrases such as “whether to,” “if set”, “if true”.
+Boolean docments should be written to describe what the argument does if true (ex: `reset_opt`). Forgo phrases such as “whether to”, “if set”, or “if true”. The exception is when the False behavior is not a negation of the True case.
 
 Keyword arguments or arguments (`**kwags` or `*args`) should not be docmented. In a notebook, internal keyword arguments should be viewable using `delegates` and `show_doc`.
 
@@ -240,7 +240,7 @@ class Learner:
             n_epoch:int, # Number of training epochs
             lr:float|None=None, # Learning rate, defaults to `self.lr`
             wd:float|None=None, # Weight decay, defaults to `self.wd`
-            cbs:listified[Callback]|None=None, # Temporary `Callback` applied during training
+            cbs:listified[Callback|Callable[...,Callback]]|None=None, # Temporary `Callback` applied during training
             reset_opt:bool=False # Recreate optimizer before training
     ):
         "Fit `self.model` for `n_epoch` using `cbs`. Optionally `reset_opt`."
@@ -258,7 +258,7 @@ class Learner:
         n_epoch:int, # Number of training epochs
         lr:float|None=None, # Learning rate, defaults to `self.lr`
         wd:float|None=None, # Weight decay, defaults to `self.wd`
-        cbs:listified[Callback]|None=None, # Temporary `Callback` applied during training
+        cbs:listified[Callback|Callable[...,Callback]]|None=None, # Temporary `Callback` applied during training
         reset_opt:bool=False # Recreate optimizer before training
 ):
         "Fit `self.model` for `n_epoch` using `cbs`. Optionally `reset_opt`."
@@ -274,7 +274,7 @@ class Learner:
         n_epoch:int, # Number of training epochs
         lr:float|None=None, # Learning rate, defaults to `self.lr`
         wd:float|None=None, # Weight decay, defaults to `self.wd`
-        cbs:listified[Callback]|None=None, # Temporary `Callback` applied during training
+        cbs:listified[Callback|Callable[...,Callback]]|None=None, # Temporary `Callback` applied during training
         reset_opt:bool=False # Recreate optimizer before training
            ):
         "Fit `self.model` for `n_epoch` using `cbs`. Optionally `reset_opt`."
